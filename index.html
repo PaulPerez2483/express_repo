@@ -1,0 +1,101 @@
+<html>
+	<head>
+		<script
+			src="https://unpkg.com/react@16/umd/react.development.js"
+			crossorigin
+		></script>
+		<script
+			src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+			crossorigin
+		></script>
+		<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.js"></script>
+		<style>
+			ul {
+				display: flex;
+				justify-content: space-around;
+				list-style-type: none;
+				color: white;
+				margin: 0px;
+				padding: 0px;
+				/* width: 100%; */
+				flex-wrap: wrap;
+			}
+
+			ul > li {
+				background-color: salmon;
+				border-radius: 10px;
+				padding: 10px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				align-content: space-between;
+				width: calc(100% / 3 - 48px);
+				margin-bottom: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root"></div>
+		<script type="text/babel">
+			const { Component } = React;
+			const { render } = ReactDOM;
+			const root = document.querySelector("#root");
+			class App extends Component {
+				constructor() {
+					super();
+					this.state = {
+						products: [],
+						companies: [],
+						loading: true
+					};
+				}
+				async componentDidMount() {
+					const products = (await axios.get("/api/products")).data;
+					const companies = (await axios.get("/api/companies")).data;
+
+					this.setState({
+						products,
+						companies,
+						loading: false
+					});
+				}
+				render() {
+					const { products, companies, loading } = this.state;
+					if (loading) return <p> loading dating</p>;
+					// console.log(data);
+					return (
+						<div>
+							<div>
+								<h1>Acme Express W/ JSON</h1>
+								<h2>Products</h2>
+								<ul>
+									{products.map((product) => (
+										<li key={product.id}>
+											<div id='product-name'>{product.name}</div>
+											<div id='product-description'>{product.description}</div>
+											<div id='product-price'>{product.suggestedPrice}</div>
+										</li>
+									))}
+								</ul>
+							</div>
+							<div>
+								<h2>Companies</h2>
+								<ul>
+									{companies.map((company) => (
+										<li key={company.id}>
+											<div id='product-name'>{company.name}</div>
+											<div id='product-description'>{company.catchPhrase}</div>
+											<div id='product-price'>{company.state}</div>
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>
+					);
+				}
+			}
+			render(<App />, root);
+		</script>
+	</body>
+</html>
