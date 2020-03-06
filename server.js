@@ -4,6 +4,7 @@ const path = require("path");
 const db = require("./db");
 
 const PORT = process.env.PORT || 3000;
+app.use(express.json());
 
 app.get("/", (req, res, next) => {
 	const indexHTML = path.join(__dirname, "index.html");
@@ -16,6 +17,10 @@ app.get("/api/products", (req, res, next) => {
 
 app.get("/api/companies", (req, res, next) => {
 	db.readJSON("./companies.json").then((result) => res.send(result));
+});
+
+app.post("/api/products", (req, res, next) => {
+	console.log(req.body);
 });
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));

@@ -16,6 +16,18 @@ const readJSON = (file) => {
 	});
 };
 
+const writeJSON = (file) => {
+	return new Promise((resolve, reject) => {
+		fs.writeFile(file, data, (err) => {
+			if (err) {
+				return reject(err);
+			}
+			resolve(data);
+		});
+	});
+};
+
 module.exports = {
-	readJSON
+	readJSON,
+	writeJSON
 };
